@@ -6,6 +6,12 @@
     min-width: 150px;
 }
 
+.url {
+  word-break: break-word;
+    min-width: 350px;
+}
+
+
 .title {
     margin: 0;
     overflow: hidden;
@@ -22,7 +28,7 @@
   }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
   .dataTables_wrapper {
     text-align: left;
   }
@@ -31,11 +37,13 @@
     display: none;
   }
 
-   #table_id {
-    width: 80% !important;
-  }
+  /* #table_id {*/
+  /*  width: 80% !important;*/
+  /*}*/
 
   .time {
+      padding: 0!important;
+      width: 0!important;
     visibility: hidden;
     position: absolute;
   }
@@ -47,5 +55,6 @@
     border-radius: 10px;
     position: absolute;
     left: -130px;
+    top: 10px;
   }
 }

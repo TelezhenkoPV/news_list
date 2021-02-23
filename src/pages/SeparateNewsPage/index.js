@@ -45,7 +45,6 @@ const SeparateNewsPage = () => {
 
     fetchData();
 
-
     dispatch(toggleLoaderAction())
   }, [ dispatch, id ])
 
