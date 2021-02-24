@@ -12,16 +12,15 @@ import List from "../../components/List"
 import { toggleLoaderAction, setNewsDataAction } from "../../store/newsList/newsListAction";
 
 
-const MainPage = () => {
+const MainPage = ( { url, totalAmountOffPages } ) => {
   const dispatch = useDispatch()
 
   const newsData = useSelector(newsDataSelector)
   const loading = useSelector(loadingSelector)
 
-  const totalAmountOffPages = 10;
-
   useEffect(() => {
 
+    // if we already get news list data - return
     if( newsData !== null ) {
       return
     }
@@ -30,25 +29,27 @@ const MainPage = () => {
 
     const arrayOfUrls = []
 
-    for(let i = 1; i <= totalAmountOffPages; ++i) {
-      arrayOfUrls.push(`https://api.hnpwa.com/v0/news/${i}.json`)
+    // fill in array with urls with aim to view pagination and organize full sorting
+    for(let i = 1; i <= +totalAmountOffPages; ++i) {
+      arrayOfUrls.push(`${url}${i}.json`)
     }
 
+    // sending requests on all urls, waiting responses and set upping data
     const arrayOfPromisesWithData = arrayOfUrls.map( url => getDataFromServe(url) );
 
     axios.all([...arrayOfPromisesWithData])
       .then(axios.spread(function (...data) {
 
-        const allCommentsData = data.reduce((acc, item) => {
+        const allNewsData = data.reduce((acc, item) => {
           return [...acc, ...item]
         })
 
-        dispatch( setNewsDataAction(allCommentsData) )
+        dispatch( setNewsDataAction(allNewsData) )
         dispatch( toggleLoaderAction() )
       }))
       .catch( error => console.log(`Ошибка: ${error}`) )
 
-  }, [ dispatch, newsData ])
+  }, [ dispatch, newsData, url, totalAmountOffPages ])
 
   return(
     <main>

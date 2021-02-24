@@ -9,7 +9,7 @@ const MainRoutes = () => {
   return (
     <>
       <Switch>
-        <Route exact path="/" render={() => <MainPage />} />
+        <Route exact path="/" render={() => <MainPage url='https://api.hnpwa.com/v0/news/' totalAmountOffPages='10' />} />
         <Route exact path="/news/:id" render={() => <SeparateNewsPage />} />
         <Route exact path="*" render={() => <NotFound />}/>
       </Switch>

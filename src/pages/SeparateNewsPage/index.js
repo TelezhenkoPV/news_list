@@ -10,6 +10,7 @@ import { toggleLoaderAction } from "../../store/newsList/newsListAction";
 import { loadingSelector } from "../../store/newsList/newsListSelectors";
 import Loader from "../../components/Loader";
 
+
 const SeparateNewsPage = () => {
   const { id } = useParams()
   const history = useHistory()
@@ -26,6 +27,7 @@ const SeparateNewsPage = () => {
 
       const data = response.comments.map( userCommentData => {
 
+        // parse date from seconds into readable view
         const date = new Date(+userCommentData.time * 1000)
 
         return (

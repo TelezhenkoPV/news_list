@@ -8,7 +8,10 @@ import NewsItem from "../NewsItem";
 const List = ( { listData } ) => {
 
   useEffect( () => {
-      $('#table_id').DataTable();
+
+    // add logic to the html table using library method
+    $('#table_id').DataTable();
+
   }, [listData])
 
   return (

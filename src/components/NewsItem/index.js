@@ -7,6 +7,7 @@ const NewsItem = ( { data }) => {
   const { time, title, url, id } = data
   const history = useHistory()
 
+  // parse date from seconds into readable view
   const date = new Date(+time * 1000)
 
   const onClickHandler = () => {
