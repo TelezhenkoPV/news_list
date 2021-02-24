@@ -13,6 +13,7 @@
 
 
 .title {
+    cursor: pointer;
     margin: 0;
     overflow: hidden;
     display: -webkit-box;
