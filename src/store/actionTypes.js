@@ -1,2 +1,4 @@
 export const TOGGLE_LOADER = 'TOGGLE_LOADER'
 export const SET_NEWS_DATA = 'SET_NEWS_DATA'
+export const SET_SORTING_VALUE = 'SET_SORTING_VALUE'
+export const SET_PAGE = 'SET_PAGE'

@@ -4,13 +4,19 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 
+import {
+  toggleLoaderAction, setSortingValueAction, setNewsDataAction, setPageAction
+} from '../../store/newsList/newsListAction'
+
+import {
+  loadingSelector, sortingValueSelector, newsDataSelector, pageSelector
+} from '../../store/newsList/newsListSelectors'
+
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Loader from '../Loader'
+import NewsItem from '../NewsItem'
 
 import getDataFromServe from '../../utils/getDataFromServe'
-
-import { toggleLoaderAction } from '../../store/newsList/newsListAction'
-import { loadingSelector } from '../../store/newsList/newsListSelectors'
 
 const sortBy = require('lodash/sortBy')
 
@@ -19,49 +25,59 @@ const List = () => {
 
   const history = useHistory()
   const dispatch = useDispatch()
-  const [page, setPage] = useState( 1 )
-  const loadingInProgress = useSelector( loadingSelector )
 
-  const [ newsData, setNewsData ] = useState( [] )
-  const [ sortingValue, setSortingValue ] = useState( 'title' )
+  const loadingInProgress = useSelector( loadingSelector )
+  const sortingValue = useSelector( sortingValueSelector )
+  const newsData = useSelector( newsDataSelector )
+  const page = useSelector( pageSelector )
+
   const [ reversed, setReversed ] = useState( false )
 
+  // initial data getting
   useEffect(() => {
     getMoreData()
   }, [page])
 
+  // async getting data while scrolling page
   const getMoreData = async () => {
     dispatch ( toggleLoaderAction() )
 
     const newData = await getDataFromServe(`https://api.hnpwa.com/v0/news/${page}.json`)
-    setNewsData((oldData) => [...oldData, ...newData])
-
+    dispatch( setNewsDataAction([ ...newsData, ...newData ]) )
     dispatch ( toggleLoaderAction() )
   }
 
-  const LoadMorePosts = () => setPage(1 + page)
+  // increment of value "page". Need it to send next request
+  const LoadMorePosts = () => dispatch( setPageAction( 1 + page ) )
 
   // sorting of columns all types
   const onSort = (key) => {
 
     if( key === sortingValue ) {
       if ( reversed ) {
-        setNewsData( sortBy(newsData, c => c[key]) )
+        dispatch( setNewsDataAction( sortBy(newsData, c => c[key]) ))
         setReversed( false )
       } else {
-        setNewsData( sortBy(newsData, c => c[key]).reverse() )
+        dispatch( setNewsDataAction( sortBy(newsData, c => c[key]).reverse() ))
         setReversed( true )
       }
       return
     }
 
-    setSortingValue(key)
-    setNewsData(sortBy(newsData, c => c[key]))
+    dispatch( setSortingValueAction(key) )
+    dispatch( setNewsDataAction( sortBy(newsData, c => c[key]) ))
   }
 
-  const openComments = (id) => history.push({
+  // on "title click" we will change route and show comments of separete news item
+  const openComments = (id) => {
+
+    // we will send request on next page if user will come back after serfing comments of separete news item
+    dispatch( setPageAction( 1 + page ) )
+    history.push({
       pathname: `/news/${id}`
     })
+
+  }
 
   return (
     <>
@@ -92,22 +108,12 @@ const List = () => {
                 </th>
               </tr>
               </thead>
-
               <tbody>
-              { newsData.map( newsItem => {
-                // parse date from seconds into readable view
-                const date = new Date(+newsItem.time * 1000)
-
-                return (
-                  <tr key={newsItem.id.toString()}>
-                    <td className='title pointer' data-id={newsItem.id} onClick={() => openComments(newsItem.id) }>{newsItem.title}</td>
-                    <td className='desktop-content'>
-                      <a className='url' target="_blank" rel="noreferrer" href={newsItem.url}>{newsItem.url}</a>
-                    </td>
-                    <td className='desktop-content time'>{ date.toDateString() }</td>
-                  </tr>
-                );
-              })}
+                {
+                  newsData.map( newsItemData => {
+                    return <NewsItem key={newsItemData.id} data={newsItemData} openComments={openComments}/>
+                  })
+                }
               </tbody>
             </table>
           </div>
