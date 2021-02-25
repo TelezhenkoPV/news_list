@@ -1,4 +1,4 @@
-import { TOGGLE_LOADER, SET_NEWS_DATA } from "../actionTypes";
+import { TOGGLE_LOADER, SET_NEWS_DATA, SET_SORTING_TITLE } from "../actionTypes";
 
 export const toggleLoaderAction = () => dispatch => {
   dispatch({ type: TOGGLE_LOADER })

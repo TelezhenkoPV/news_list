@@ -1,4 +1,4 @@
-import {SET_NEWS_DATA, TOGGLE_LOADER} from "../actionTypes";
+import {SET_NEWS_DATA, TOGGLE_LOADER, SET_SORTING_TITLE } from "../actionTypes";
 
 const initialStore = {
   loading: false,
