@@ -1,8 +1,8 @@
-import {SET_NEWS_DATA, TOGGLE_LOADER, SET_SORTING_TITLE } from "../actionTypes";
+import {SET_NEWS_DATA, TOGGLE_LOADER } from "../actionTypes";
 
 const initialStore = {
   loading: false,
-  newsData: null,
+  newsData: []
 }
 
 const reducer = ( store = initialStore, action ) => {
